@@ -1,0 +1,4 @@
+Delete all the files in src file
+Add a new file named index.css
+Add a new file named index.js
+Add lines in index.js

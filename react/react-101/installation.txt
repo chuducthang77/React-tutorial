@@ -6,3 +6,6 @@ npx create-react-app my-app
 cd my-app
 ls -la
 npm start
+
+-------Update new version of npm-----------------
+npm install -g npm
