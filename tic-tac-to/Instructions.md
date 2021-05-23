@@ -9,3 +9,8 @@
 - button Onclick: built-in component 
 - slice(): mutable vs immutable object
 
+## Function components
+- only contains render method without having its own state
+
+## Taking turns
+- Use short conditional statement: A ? B : C
