@@ -1,7 +1,9 @@
+import Hero from './Hero'
+
 const Home = () => {
     return (
       <>
-        <h1>Hello world from home this is change</h1>
+        <Hero text="Hello world, this is homepage"/>
       </>
     )
   }
