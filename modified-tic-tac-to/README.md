@@ -1,3 +1,6 @@
+#Modified tic-tac-to
+This project re-implemented the older tic-tac-to version, with the extension of some sort of simple AI-bot to compute against the human (random method, minimax algorithm, alpha-beta algorithm). Also, this project implemented a new 9x9 version of tic-tac-to with the new rules
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
