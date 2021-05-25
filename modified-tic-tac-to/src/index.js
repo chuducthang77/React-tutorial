@@ -23,10 +23,16 @@ class Board extends React.Component {
 
   handleClick(i) {
     const squares = this.state.squares.slice();
+    //Simple AI using random method
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
-    squares[i] = this.state.isX ? "X" : "O";
+    if (this.state.isX) {
+        squares[i] = 'X'
+    } else {
+        const number = Math.floor(Math.random() * 9)
+        squares[number] = 'O'
+    }
     this.setState({ squares: squares, isX: !this.state.isX });
   }
 
