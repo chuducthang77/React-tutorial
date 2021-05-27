@@ -1,4 +1,4 @@
-
+# Python implementation of Minimax and simple user-interface on the terminal
 def calculateWinner(board):
     lines = [
         [0, 1, 2],
