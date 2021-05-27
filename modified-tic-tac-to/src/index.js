@@ -18,7 +18,6 @@ class Board extends React.Component {
     this.state = {
       squares: Array(9).fill(null),
       isX: true,
-      depth: 9,
     };
   }
 
@@ -31,17 +30,16 @@ class Board extends React.Component {
     if (this.state.isX) {
       squares[i] = "X";
     } else {
-      //   let number = Math.floor(Math.random() * 9)
-      //   while (squares[number]) {
-      //       number = Math.floor(Math.random() * 9)
-      //   }
-      let number = MiniMax(this.state.squares, this.state.depth, true);
-      squares[number] = "O";
+      // let number = Math.floor(Math.random() * 9)
+      // while (squares[number]) {
+      //     number = Math.floor(Math.random() * 9)
+      // }
+      let result = minimax(this.state.squares, true);
+      squares[result['index']] = "O";
     }
-    let num = this.state.depth
-    num--
-    this.setState({ squares: squares, isX: !this.state.isX,
-                    depth: num});
+
+    //Change the depth, the turn, and the board
+    this.setState({ squares: squares, isX: !this.state.isX});
   }
 
   renderSquare(i) {
@@ -138,6 +136,7 @@ function calculateWinner(squares) {
   let draw = true;
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
+    //Check if any squares is not empty
     if (!squares[i]) {
       draw = false;
     }
@@ -145,65 +144,90 @@ function calculateWinner(squares) {
       return squares[a];
     }
   }
+  
+  //If the game is draw or if the game is still continuing
   if (draw) {
     return "draw";
   }
   return null;
 }
 
-function MiniMax(squares, depth, maximizingPlayer) {
-  
-  if (depth === 0) {
-    const result = calculateWinner(squares);
-    if (result === "X") {
-      return -1;
-    } else if (result === "O") {
-      return 1;
-    } else if (result === "draw") {
-      return 0;
+function minimax(squares, maximizingPlayer) {
+  let empty = [];
+  for (let i = 0; i < squares.length; i++) {
+    if (!squares[i]) {
+      empty.push(i)
+    }
+  }
+    if (calculateWinner(squares) === 'X') {
+      return {'index': 'leaf', 'value': -10, 'depth': 1}
+    } else if (calculateWinner(squares) === 'O') {
+      return {'index': 'leaf', 'value': 10, 'depth': 1}
+    } else if (calculateWinner(squares) === 'draw') {
+      return {'index': 'leaf', 'value': 0, 'depth': 1}
+    }
+
+  // Append the key: value pair (position: score) in the dictionary 
+  let storage = [];
+  for (let i = 0; i < empty.length; i++) {
+    let tempSquare = squares.slice()
+    if (maximizingPlayer) {
+      tempSquare[empty[i]] = 'O'
+      let score = minimax(tempSquare, false)
+      storage.push(score)
+    } else {
+      tempSquare[empty[i]] = 'X'
+      let score = minimax(tempSquare, true)
+      storage.push(score)
     }
   }
 
+  var bestIdea = {};
   if (maximizingPlayer) {
+    let bestScore = -Infinity
+    let bestMove = null
+    let bestDepth = Infinity
 
-    let value = -Infinity;
-    let position = Array(depth).fill(null);
-    let j = 0;
-
-    //Save the position is still empty in the board
-    for (let i = 0; i < squares.length; i++) {
-      if (squares[i] == null) {
-        position[j] = i;
-        j++;
+    for (let i = 0; i < storage.length; i++) {
+      if (storage[i]['value'] === bestScore && storage[i]['depth'] < bestDepth) {
+        bestScore = storage[i]['value']
+        bestMove = empty[i]
+        bestDepth = storage[i]['depth'] + 1
+      }
+      if (storage[i]['value'] > bestScore) {
+        bestScore = storage[i]['value']
+        bestMove = empty[i]
+        bestDepth = storage[i]['depth'] + 1
       }
     }
-    
-    //For each position, fill in that position and calculate the value it returns
-    for (let i = 0; i < position.length; i++) {
-      let tempSquares = squares.slice()
-      tempSquares[position[i]] = "O";
-      let temp = MiniMax(tempSquares, depth - 1, false)
-      value = Math.max(value, temp);
-      
-    }
-    
+    bestIdea['index'] = bestMove
+    bestIdea['value'] = bestScore
+    bestIdea['depth'] = bestDepth
   } else {
-    let value = +Infinity;
-    let position = Array(depth).fill(null);
-    let j = 0;
+    let bestScore = Infinity
+    let bestMove = null
+    let bestDepth = -Infinity
 
-    //Save the position is still empty in the board
-    for (let i = 0; i < squares.length; i++) {
-      if (squares[i] == null) {
-        position[j] = i;
-        j++;
+    for (let i = 0; i < storage.length; i++) {
+      if (storage[i]['value'] === bestScore && storage[i]['depth'] > bestDepth) {
+        bestScore = storage[i]['value']
+        bestMove = empty[i]
+        bestDepth = storage[i]['depth'] + 1
+      }
+      if (storage[i]['value'] < bestScore) {
+        bestScore = storage[i]['value']
+        bestMove = empty[i]
+        bestDepth = storage[i]['depth'] + 1
       }
     }
-    //For each position, fill in that position and calculate the value it returns
-    for (let i = 0; i < position; i++) {
-      squares[position[i]] = "X";
-      value = Math.min(value, MiniMax(squares, depth - 1, true));
-      return value;
-    }
+    bestIdea['index'] = bestMove
+    bestIdea['value'] = bestScore
+    bestIdea['depth'] = bestDepth
   }
+  return bestIdea
+
+
+  
+  
+
 }
