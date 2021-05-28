@@ -86,15 +86,55 @@ def minmax(board, maximizingPlayer):
 
     return bestIdea
 
+def alphaBeta(board, alpha=-999999999, beta=999999999, maximizingPlayer=True):
+    empty = []
+    for i in range(len(board)):
+        if board[i] == '':
+            empty.append(i)
 
-board = ['', '', '', '', '', '', '', '', '']
+    if calculateWinner(board) == 'X':
+        return {'index': 'leaf', 'value': -10}
+    elif calculateWinner(board) == 'O':
+        return {'index': 'leaf', 'value': 10}
+    elif calculateWinner(board) == 'D':
+        return {'index':'leaf', 'value': 0}
+
+    if maximizingPlayer:
+        bestScore = -999999999
+        bestMove = None
+        for i in range(len(empty)):
+            result = alphaBeta(board, alpha, beta, False)
+            temp = max(bestScore, result['value'])
+            if temp > bestScore:
+                bestScore = temp
+                bestMove = empty[i]
+            alpha = max(alpha, bestScore)
+            if alpha >= beta:
+                break
+        return {'index':bestMove, 'value':bestScore}
+    else:
+        bestScore = 999999999
+        bestMove = None
+        for i in range(len(empty)):
+            result = alphaBeta(board, alpha, beta, True)
+            temp = min(bestScore, result['value'])
+            if temp < bestScore:
+                bestScore = temp
+                bestMove = empty[i]
+            alpha = min(alpha, bestScore)
+            if alpha >= beta:
+                break
+        return {'index':bestMove, 'value':bestScore}
+
+
+board = ['O', 'O', 'X', '', 'X', '', '', '', '']
 turn = 'Human'
 while True:
     if turn == 'Human':
         index = input('Enter where you want to play (0-8): ')
         board[int(index)] = 'X'
     else:
-        index = minmax(board, True)['index']
+        index = alphaBeta(board,-999999999,999999999, True)['index']
         board[index] = 'O'
     if turn == 'Human':
         print('--------------Human plays--------------')
