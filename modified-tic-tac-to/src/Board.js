@@ -118,15 +118,16 @@ function calculateWinner(squares) {
   let draw = true;
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
-    //Check if any squares is not empty
-    if (!squares[i]) {
-      draw = false;
-    }
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
     }
   }
-
+  for (let i = 0; i < squares.length; i++) {
+    //Check if any squares is not empty
+    if (!squares[i]) {
+      draw = false;
+    }
+  }
   //If the game is draw or if the game is still continuing
   if (draw) {
     return "draw";
@@ -239,7 +240,9 @@ function alphaBeta(squares, alpha, beta, maximizingPlayer) {
     let bestScore = -Infinity;
     let bestMove = null;
     for (let i = 0; i < empty.length; i++) {
-      let result = alphaBeta(squares, alpha, beta, false);
+      let copySquare = squares.slice();
+      copySquare[empty[i]] = "O";
+      let result = alphaBeta(copySquare, alpha, beta, false);
       let temp = Math.max(bestScore, result["value"]);
       if (temp > bestScore) {
         bestScore = temp;
@@ -255,7 +258,9 @@ function alphaBeta(squares, alpha, beta, maximizingPlayer) {
     let bestScore = Infinity;
     let bestMove = null;
     for (let i = 0; i < empty.length; i++) {
-      let result = alphaBeta(squares, alpha, beta, true);
+      let copySquare = squares.slice();
+      copySquare[empty[i]] = "X";
+      let result = alphaBeta(copySquare, alpha, beta, true);
       let temp = Math.min(bestScore, result["value"]);
       if (temp < bestScore) {
         bestScore = temp;

@@ -103,7 +103,9 @@ def alphaBeta(board, alpha=-999999999, beta=999999999, maximizingPlayer=True):
         bestScore = -999999999
         bestMove = None
         for i in range(len(empty)):
-            result = alphaBeta(board, alpha, beta, False)
+            squareCopy = board.copy()
+            squareCopy[empty[i]] = 'O'
+            result = alphaBeta(squareCopy, alpha, beta, False)
             temp = max(bestScore, result['value'])
             if temp > bestScore:
                 bestScore = temp
@@ -116,7 +118,9 @@ def alphaBeta(board, alpha=-999999999, beta=999999999, maximizingPlayer=True):
         bestScore = 999999999
         bestMove = None
         for i in range(len(empty)):
-            result = alphaBeta(board, alpha, beta, True)
+            squareCopy = board.copy()
+            squareCopy[empty[i]] = 'X'
+            result = alphaBeta(squareCopy, alpha, beta, True)
             temp = min(bestScore, result['value'])
             if temp < bestScore:
                 bestScore = temp
