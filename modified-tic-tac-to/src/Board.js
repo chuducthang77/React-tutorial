@@ -2,6 +2,7 @@ import React from "react";
 import "./index.css";
 import Square from "./Square";
 import Reset from "./reset";
+import Option from "./option"
 
 class Board extends React.Component {
   constructor(props) {
@@ -73,6 +74,7 @@ class Board extends React.Component {
     }
     return (
       <div>
+        <Option />
         <div className="status">{status}</div>
         <div className="board-row">
           {this.renderSquare(0)}

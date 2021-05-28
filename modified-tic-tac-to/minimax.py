@@ -125,7 +125,7 @@ def alphaBeta(board, alpha=-999999999, beta=999999999, maximizingPlayer=True):
             if temp < bestScore:
                 bestScore = temp
                 bestMove = empty[i]
-            alpha = min(alpha, bestScore)
+            beta = min(beta, bestScore)
             if alpha >= beta:
                 break
         return {'index':bestMove, 'value':bestScore}
